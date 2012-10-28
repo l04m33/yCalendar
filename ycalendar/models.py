@@ -1,7 +1,11 @@
+import datetime
+
 from sqlalchemy import (
     Column,
     Integer,
-    Text,
+    Unicode,
+    UnicodeText,
+    DateTime,
     )
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -16,13 +20,11 @@ from zope.sqlalchemy import ZopeTransactionExtension
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
-class MyModel(Base):
-    __tablename__ = 'models'
-    id = Column(Integer, primary_key=True)
-    name = Column(Text, unique=True)
-    value = Column(Integer)
 
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
+class DetailInfo(Base):
+    __tablename__ = 'cal_details'
+    id = Column(Integer, primary_key=True)
+    title = Column(Unicode(128), nullable=False)
+    content = Column(UnicodeText, default='')
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
 

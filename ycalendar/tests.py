@@ -12,12 +12,12 @@ class TestMyView(unittest.TestCase):
         engine = create_engine('sqlite://')
         from .models import (
             Base,
-            MyModel,
+            DetailInfo,
             )
         DBSession.configure(bind=engine)
         Base.metadata.create_all(engine)
         with transaction.manager:
-            model = MyModel(name='one', value=55)
+            model = DetailInfo(title='test_title', content='test_content')
             DBSession.add(model)
 
     def tearDown(self):
