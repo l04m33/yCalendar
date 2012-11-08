@@ -8,27 +8,23 @@ from .models import (
     DetailInfo,
     )
 
-@view_config(route_name='home', renderer='templates/mytemplate.pt')
-def my_view(request):
+import datetime as dt
+
+
+# TODO: add the input date parameter and process it....
+@view_config(route_name='daily_list.json', renderer='json')
+def daily_list_json(request):
     try:
-        one = DBSession.query(DetailInfo).filter(DetailInfo.title=='delete_me').first()
+        info_list = DBSession.query(DetailInfo).filter(
+                DetailInfo.timestamp >= dt.datetime(2012, 11, 8, 0, 0, 0),
+                DetailInfo.timestamp < dt.datetime(2012, 11, 9, 0, 0, 0)).all()
     except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one':one, 'project':'yCalendar'}
+        return Response('Datebase error.', content_type='text/plain', status_int=500)
+    return [detail_info_to_dict(d) for d in info_list]
 
-conn_err_msg = """\
-Pyramid is having a problem using your SQL database.  The problem
-might be caused by one of the following things:
 
-1.  You may need to run the "initialize_yCalendar_db" script
-    to initialize your database tables.  Check your virtual 
-    environment's "bin" directory for this script and try to run it.
-
-2.  Your database server may not be running.  Check that the
-    database server referred to by the "sqlalchemy.url" setting in
-    your "development.ini" file is running.
-
-After you fix the problem, please restart the Pyramid application to
-try it again.
-"""
+def detail_info_to_dict(detail_info):
+    return {'id':       detail_info.id,
+            'title':    detail_info.title,
+            'timestamp':int(detail_info.timestamp.strftime('%s'))}
 
