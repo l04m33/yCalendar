@@ -12,7 +12,6 @@ import datetime as dt
 import sqlalchemy as sqla
 
 
-# TODO: add the input date parameter and process it....
 @view_config(route_name='daily_list.json', renderer='json')
 def daily_list_json(request):
     year = int(request.matchdict.get('year', -1))
