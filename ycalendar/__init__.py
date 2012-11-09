@@ -14,9 +14,10 @@ def main(global_config, **settings):
     Base.metadata.bind = engine
     config = Configurator(settings=settings)
     config.add_static_view('static', 'static', cache_max_age=3600)
-    config.add_route('home', '/')
+    #config.add_route('home', '/')
     config.add_route('daily_list.json',     '/json/daily_list/{year:\d+}-{month:\d+}-{day:\d+}')
     config.add_route('detail_info.json',    '/json/detail_info/{id:\d+}')
+    config.add_route('update_detail_info.json',     '/json/detail_info/{id:\d+}/update')
     config.scan()
     return config.make_wsgi_app()
 

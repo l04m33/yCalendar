@@ -32,14 +32,41 @@ def detail_info(request):
     info_id = int(request.matchdict.get('id', -1))
     info = DBSession.query(DetailInfo).filter(DetailInfo.id == info_id).first()
     if info is None:
-        return HTTPNotFound()
+        return {}
     return {'info': detail_info_to_full_dict(info)}
+
+
+@view_config(route_name='update_detail_info.json', renderer='json')
+def update_detail_info(request):
+    if request.method == 'POST':
+        info_id = int(request.matchdict.get('id', 0))
+        if info_id == 0:
+            info = DetailInfo()
+        else:
+            info = DBSession.query(DetailInfo).filter(DetailInfo.id == info_id).first()
+            if info is None:
+                return {}
+
+        new_title = request.POST.get('title')
+        new_content = request.POST.get('content')
+        if new_title is None or len(new_title) == 0:
+            return {'bad_fields': [{'title': 'empty'}]}
+        else:
+            info.title = new_title
+            info.content = new_content
+            if info_id == 0:
+                DBSession.add(info)
+            return {'ok': 0}
+
+    else:
+        return {}
 
 
 def detail_info_to_brief_dict(detail_info):
     return {'id':       detail_info.id,
             'title':    detail_info.title,
             'timestamp':int(detail_info.timestamp.strftime('%s'))}
+
 
 def detail_info_to_full_dict(detail_info):
     return {'id':       detail_info.id,
