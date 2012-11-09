@@ -9,6 +9,7 @@ from .models import (
     )
 
 import datetime as dt
+import sqlalchemy as sqla
 
 
 # TODO: add the input date parameter and process it....
@@ -17,7 +18,7 @@ def daily_list_json(request):
     try:
         info_list = DBSession.query(DetailInfo).filter(
                 DetailInfo.timestamp >= dt.datetime(2012, 11, 8, 0, 0, 0),
-                DetailInfo.timestamp < dt.datetime(2012, 11, 9, 0, 0, 0)).all()
+                DetailInfo.timestamp < dt.datetime(2012, 11, 9, 0, 0, 0)).order_by(sqla.desc(DetailInfo.timestamp)).all()
     except DBAPIError:
         return Response('Datebase error.', content_type='text/plain', status_int=500)
     return [detail_info_to_dict(d) for d in info_list]
