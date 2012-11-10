@@ -55,6 +55,16 @@ def update_detail_info(request):
             info.title = new_title
             info.content = new_content
             if info_id == 0:
+                now = dt.datetime.utcnow()
+                info.timestamp = now
+                info.ts_year = now.year
+                info.ts_month = now.month
+                info.ts_day = now.day
+                iso_weekday = now.isoweekday()      # isoweekday: Mon. 1 -- 7 Sun.
+                if iso_weekday == 7:
+                    info.ts_weekday = 0             # weekday: Sun. 0 -- 6 Sat.
+                else:
+                    info.ts_weekday = iso_weekday
                 DBSession.add(info)
             return {'ok': 0}
 
