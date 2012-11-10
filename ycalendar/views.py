@@ -18,12 +18,32 @@ def daily_list(request):
     year = int(request.matchdict.get('year', -1))
     month = int(request.matchdict.get('month', -1))
     day = int(request.matchdict.get('day', -1))
+
+    offset = get_req_data(request.GET, 'offset', int, 0)
+    limit = get_req_data(request.GET, 'limit', int, 10)
+
     this_day = dt.datetime(year, month, day)
     next_day = this_day + dt.timedelta(1, 0, 0)
+
     info_list = DBSession.query(DetailInfo).filter(
             DetailInfo.timestamp >= this_day, 
             DetailInfo.timestamp < next_day).order_by(
-                    sqla.desc(DetailInfo.timestamp)).all()
+                    sqla.desc(DetailInfo.timestamp)).slice(offset, offset + limit)
+    return {'info_list': [detail_info_to_brief_dict(d) for d in info_list]}
+
+
+@view_config(route_name='vertical_daily_list.json', renderer='json')
+def vertical_daily_list(request):
+    month = int(request.matchdict.get('month', -1))
+    day = int(request.matchdict.get('day', -1))
+
+    offset = get_req_data(request.GET, 'offset', int, 0)
+    limit = get_req_data(request.GET, 'limit', int, 10)
+
+    info_list = DBSession.query(DetailInfo).filter(
+            DetailInfo.ts_month == month,
+            DetailInfo.ts_day == day).order_by(
+                    sqla.desc(DetailInfo.timestamp)).slice(offset, offset + limit)
     return {'info_list': [detail_info_to_brief_dict(d) for d in info_list]}
 
 
@@ -49,11 +69,13 @@ def update_detail_info(request):
 
         new_title = request.POST.get('title')
         new_content = request.POST.get('content')
-        if new_title is None or len(new_title) == 0:
+        if info_id == 0 and (new_title is None or len(new_title) == 0):
             return {'bad_fields': [{'title': 'empty'}]}
         else:
-            info.title = new_title
-            info.content = new_content
+            if new_title is not None and len(new_title) > 0:
+                info.title = new_title
+            if new_content is not None:
+                info.content = new_content
             if info_id == 0:
                 now = dt.datetime.utcnow()
                 info.timestamp = now
@@ -83,4 +105,11 @@ def detail_info_to_full_dict(detail_info):
             'title':    detail_info.title,
             'content':  detail_info.content,
             'timestamp':int(detail_info.timestamp.strftime('%s'))}
+
+
+def get_req_data(method, key, val_type, default_val):
+    try:
+        return val_type(method.get(key, default_val))
+    except ValueError:
+        return default_val
 
