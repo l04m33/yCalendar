@@ -60,7 +60,6 @@ function populate_cells() {
         container.append(new_cell);
 
         if (cur_day.toDate() < first_day_of_month || cur_day.toDate() > last_day_of_month) {
-            alert(cur_day.format("LLLL") + "\n" + last_day_of_month.format("LLLL"));
             // XXX: move this to the CSS files?
             new_cell.css({
                 "background":  "#fbfbfb",
