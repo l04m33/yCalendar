@@ -34,7 +34,7 @@ function populate_cells() {
     var last_day_of_month = moment().endOf("month");
     var last_day_of_page = last_day_of_month.clone().add("days", 6 - last_day_of_month.day());
 
-    var cur_day = first_day_of_page.clone();
+    var cur_day = first_day_of_page.clone().add("hours", 12);
     var cell_class, 
         container, 
         new_cell,
@@ -58,6 +58,17 @@ function populate_cells() {
         new_date_span = $('<span class="date">' + cur_day.date() + '</span>');
         new_cell.append(new_date_span);
         container.append(new_cell);
+
+        if (cur_day.toDate() < first_day_of_month || cur_day.toDate() > last_day_of_month) {
+            alert(cur_day.format("LLLL") + "\n" + last_day_of_month.format("LLLL"));
+            // XXX: move this to the CSS files?
+            new_cell.css({
+                "background":  "#fbfbfb",
+                "opacity":     "0.7"});
+            new_date_span.css({
+                "opacity":     "0.7", 
+                "text-shadow": "1px 1px 1px #c0c0c0"});
+        }
 
         cur_day.add("days", 1);
     }
