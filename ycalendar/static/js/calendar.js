@@ -59,6 +59,8 @@ function populate_cells() {
         new_cell.append(new_date_span);
         container.append(new_cell);
 
+        new_cell.data('moment', cur_day.clone());
+
         if (cur_day.toDate() < first_day_of_month || cur_day.toDate() > last_day_of_month) {
             // XXX: move this to the CSS files?
             new_cell.css({
