@@ -55,6 +55,16 @@
 			<hr style="margin-bottom: 10px;" />
 		</div>
 
+        <div id="edit_form" class="sixteen columns">
+            <h4 id="edit_form_title"></h4>
+            <form>
+                <input name="title" type="text" placeholder="Title" required="required" />
+                <textarea name="content" placeholder="Content"></textarea>
+                <input type="button" value="Ok" />
+                <input type="button" value="Cancel" />
+            </form>
+        </div>
+
 		<div class="two columns" style="background: #fafaff; height: 368px; margin-top: 2px;">
             <br />
 		</div>
@@ -116,17 +126,14 @@
                 <div class="right-cell"> <span class="date">7</span> </div>
             </div>
 
-
 		</div>
 
         <div id="details">
             <span id="details_header" style="float:left;width:95px;padding:5px;">
-                <div id="btn_add" class="button" style="width:68px;">2012-11-28 +</div>
+                <div id="btn_add" class="button" style="width:68px;">
+                    <span id="btn_add_title">2012-11-28</span> +
+                </div>
             </span>
-            <!--
-            <span style="float:left;width:95px;">lalala</span>
-            <span style="float:left;width:95px;">hahaha</span>
-            -->
         </div>
 
 	</div><!-- container -->

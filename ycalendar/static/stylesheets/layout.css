@@ -201,6 +201,10 @@
         box-shadow:         1px 1px 6px #cccccc;
     }
 
+    #edit_form {
+        height:         0px;
+    }
+
 /* #Media Queries
 ================================================== */
 

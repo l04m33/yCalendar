@@ -1,17 +1,44 @@
 function cell_on_click() {
     var self = $(this);
     var details = $("#details");
+    var btn_add = $("#btn_add");
+    var btn_add_title = $("#btn_add_title");
+    var cur_moment = self.data("moment");
+
+    btn_add.data('moment', cur_moment);
 
     if (details.is(":visible")) {
         details.animate({width: "0px"}, 400,
             function() {
                 self.parent().after(details);
+                btn_add_title.html(cur_moment.format("YYYY-MM-DD"));
                 details.animate({width: "100px"}, 400);
             });
     }
     else {
         self.parent().after(details);
+        btn_add_title.html(cur_moment.format("YYYY-MM-DD"));
         details.show().animate({width: "100px"}, 400);
+    }
+}
+
+
+function btn_add_on_click() {
+    var self = $(this);
+    var edit_form = $("#edit_form");
+    var edit_form_title = $("#edit_form_title");
+    var cur_moment = self.data("moment");
+
+    if (edit_form.is(":visible")) {
+        edit_form.animate({height: "0px"}, 400,
+            function() {
+                edit_form_title.html(cur_moment.format("LL"));
+                edit_form.animate({height: "240px"}, 400);
+            });
+    }
+    else {
+        edit_form_title.html(cur_moment.format("LL"));
+        edit_form.show().animate({height: "240px"}, 400);
     }
 }
 
@@ -79,8 +106,11 @@ function populate_cells() {
 $(document).ready(function() {
     populate_cells();
     $("#details").hide();
+    $("#edit_form").hide();
     $(".cell").bind("click", cell_on_click);
     $(".left-cell").bind("click", cell_on_click);
     $(".right-cell").bind("click", cell_on_click);
+    $(".right-cell").bind("click", cell_on_click);
+    $("#btn_add").bind("click", btn_add_on_click);
 });
 
