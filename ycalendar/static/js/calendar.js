@@ -105,12 +105,17 @@ function populate_cells() {
 
 $(document).ready(function() {
     populate_cells();
+
+    var col_height = $('#col-0').height();
     $("#details").hide();
+    $("#details").css({height: col_height + 'px'});
+
     $("#edit_form").hide();
+
     $(".cell").bind("click", cell_on_click);
     $(".left-cell").bind("click", cell_on_click);
     $(".right-cell").bind("click", cell_on_click);
-    $(".right-cell").bind("click", cell_on_click);
+
     $("#btn_add").bind("click", btn_add_on_click);
 });
 
