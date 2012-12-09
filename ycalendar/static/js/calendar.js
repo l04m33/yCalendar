@@ -23,6 +23,18 @@ function cell_on_click() {
 }
 
 
+function btn_close_on_click() {
+    var details = $("#details");
+
+    if (details.is(":visible")) {
+        details.animate({width: "0px"}, 400,
+            function() {
+                details.hide();
+            });
+    }
+}
+
+
 function btn_add_on_click() {
     var self = $(this);
     var edit_form = $("#edit_form");
@@ -56,7 +68,6 @@ function btn_add_on_click() {
 
 
 function btn_edit_cancel_on_click() {
-    var self = $(this);
     var edit_form = $("#edit_form");
 
     if (edit_form.is(":visible")) {
@@ -114,13 +125,7 @@ function populate_cells() {
         new_cell.data('moment', cur_day.clone());
 
         if (cur_day.toDate() < first_day_of_month || cur_day.toDate() > last_day_of_month) {
-            // XXX: move this to the CSS files?
-            new_cell.css({
-                "background":  "#fbfbfb",
-                "opacity":     "0.7"});
-            new_date_span.css({
-                "opacity":     "0.7", 
-                "text-shadow": "1px 1px 1px #c0c0c0"});
+            new_cell.addClass("inactive-cell");
         }
 
         cur_day.add("days", 1);
@@ -131,9 +136,12 @@ function populate_cells() {
 $(document).ready(function() {
     populate_cells();
 
-    var col_height = $('#col-0').height();
+    var col_height = $("#col-0").height();
+    var header_height = $("details_header").height();
+    var container_height = col_height - header_height - 49;
     $("#details").hide();
     $("#details").css({height: col_height + 'px'});
+    $("#details_container").css({height: container_height + 'px'});
 
     $("#edit_form").hide();
 
@@ -143,5 +151,7 @@ $(document).ready(function() {
 
     $("#btn_add").bind("click", btn_add_on_click);
     $("#btn_edit_cancel").bind("click", btn_edit_cancel_on_click);
+    $("#btn_close").bind("click", btn_close_on_click);
+    $("#details").bind("mouseleave", btn_close_on_click);
 });
 
