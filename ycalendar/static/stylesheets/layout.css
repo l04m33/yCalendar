@@ -83,7 +83,8 @@
         -webkit-box-shadow: 1px 1px 5px #d0d0d0;
         -moz-box-shadow:    1px 1px 5px #d0d0d0;
         box-shadow:         1px 1px 5px #d0d0d0;
-        border-radius: 10px;
+        border-radius:  10px;
+        cursor:         pointer;
     }
 
     .cell:hover {
@@ -117,7 +118,8 @@
         -webkit-box-shadow: 1px 1px 5px #d0d0d0;
         -moz-box-shadow:    1px 1px 5px #d0d0d0;
         box-shadow:         1px 1px 5px #d0d0d0;
-        border-radius: 10px;
+        border-radius:  10px;
+        cursor:         pointer;
     }
 
     .left-cell:hover {
@@ -151,7 +153,8 @@
         -webkit-box-shadow: 1px 1px 5px #d0d0d0;
         -moz-box-shadow:    1px 1px 5px #d0d0d0;
         box-shadow:         1px 1px 5px #d0d0d0;
-        border-radius: 10px;
+        border-radius:  10px;
+        cursor:         pointer;
     }
 
     .right-cell:hover {
