@@ -138,7 +138,7 @@ $(document).ready(function() {
 
     var col_height = $("#col-0").height();
     var header_height = $("details_header").height();
-    var container_height = col_height - header_height - 49;
+    var container_height = col_height - header_height - 64;
     $("#details").hide();
     $("#details").css({height: col_height + 'px'});
     $("#details_container").css({height: container_height + 'px'});
