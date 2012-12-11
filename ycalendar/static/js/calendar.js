@@ -1,9 +1,9 @@
 function cell_on_click() {
-    var self = $(this);
-    var details = $("#details");
-    var btn_add = $("#btn_add");
-    var btn_add_title = $("#btn_add_title");
-    var cur_moment = self.data("moment");
+    var self = $(this),
+        details = $("#details"),
+        btn_add = $("#btn_add"),
+        btn_add_title = $("#btn_add_title"),
+        cur_moment = self.data("moment");
 
     btn_add.data('moment', cur_moment);
 
@@ -37,17 +37,17 @@ function btn_close_on_click() {
 
 function btn_add_on_click() {
     var self = $(this);
-    var edit_form = $("#edit_form");
-    var edit_form_title = $("#edit_form_title");
-    var cur_moment = self.data("moment");
-    var txt_title = $("#txt_title");
-    var txt_content = $("#txt_content");
+        edit_form = $("#edit_form"),
+        edit_form_title = $("#edit_form_title"),
+        cur_moment = self.data("moment"),
+        txt_title = $("#txt_title"),
+        txt_content = $("#txt_content");
 
     if (edit_form.is(":visible")) {
         edit_form.animate({height: "0px"}, 400,
             function() {
-                txt_title.attr("value", "");
-                txt_content.attr("value", "");
+                txt_title.val("");
+                txt_content.val("");
                 edit_form_title.html(cur_moment.format("LL"));
                 edit_form.animate({height: "240px"}, 400,
                     function() {
@@ -56,8 +56,8 @@ function btn_add_on_click() {
             });
     }
     else {
-        txt_title.attr("value", "");
-        txt_content.attr("value", "");
+        txt_title.val("");
+        txt_content.val("");
         edit_form_title.html(cur_moment.format("LL"));
         edit_form.show().animate({height: "240px"}, 400,
             function() {
@@ -79,6 +79,30 @@ function btn_edit_cancel_on_click() {
 }
 
 
+function form_edit_on_submit(ev) {
+    var edit_form = $("#edit_form");
+        txt_title = $("#txt_title"),
+        txt_content = $("#txt_content"),
+        data = {
+            title: txt_title.val(),
+            content: txt_content.val()
+        };
+
+    ev.preventDefault();
+
+
+    $.post("/json/detail_info/0/update", data,
+        function(ret_data) {
+            // TODO: check the return value, and display errors?
+            alert(JSON.stringify(ret_data));
+            edit_form.animate({height: "0px"}, 400,
+                function() {
+                    edit_form.hide();
+                });
+        });
+}
+
+
 function populate_cells() {
     var i;
     var cells_area = $("#cells-area");
@@ -92,10 +116,10 @@ function populate_cells() {
     }
 
     var now = moment();
-    var first_day_of_month = moment().startOf("month");
-    var first_day_of_page = first_day_of_month.clone().subtract("days", first_day_of_month.day());
-    var last_day_of_month = moment().endOf("month");
-    var last_day_of_page = last_day_of_month.clone().add("days", 6 - last_day_of_month.day());
+    var first_day_of_month = moment().startOf("month"),
+        first_day_of_page = first_day_of_month.clone().subtract("days", first_day_of_month.day()),
+        last_day_of_month = moment().endOf("month"),
+        last_day_of_page = last_day_of_month.clone().add("days", 6 - last_day_of_month.day());
 
     var cur_day = first_day_of_page.clone().add("hours", 12);
     var cell_class, 
@@ -136,9 +160,10 @@ function populate_cells() {
 $(document).ready(function() {
     populate_cells();
 
-    var col_height = $("#col-0").height();
-    var header_height = $("details_header").height();
-    var container_height = col_height - header_height - 64;
+    var col_height = $("#col-0").height(),
+        header_height = $("details_header").height(),
+        container_height = col_height - header_height - 64;
+
     $("#details").hide();
     $("#details").css({height: col_height + 'px'});
     $("#details_container").css({height: container_height + 'px'});
@@ -151,6 +176,7 @@ $(document).ready(function() {
 
     $("#btn_add").bind("click", btn_add_on_click);
     $("#btn_edit_cancel").bind("click", btn_edit_cancel_on_click);
+    $("#edit_form").bind("submit", form_edit_on_submit);
     $("#btn_close").bind("click", btn_close_on_click);
     $("#details").bind("mouseleave", btn_close_on_click);
 });
