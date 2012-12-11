@@ -80,7 +80,7 @@ function btn_edit_cancel_on_click() {
 
 
 function form_edit_on_submit(ev) {
-    var edit_form = $("#edit_form");
+    var edit_form = $("#edit_form"),
         txt_title = $("#txt_title"),
         txt_content = $("#txt_content"),
         data = {
@@ -89,7 +89,6 @@ function form_edit_on_submit(ev) {
         };
 
     ev.preventDefault();
-
 
     $.post("/json/detail_info/0/update", data,
         function(ret_data) {
