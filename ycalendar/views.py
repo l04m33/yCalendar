@@ -69,6 +69,7 @@ def update_detail_info(request):
 
         new_title = request.POST.get('title')
         new_content = request.POST.get('content')
+        new_timestamp = get_req_data(request.POST, 'timestamp', int, 0)
         if info_id == 0 and (new_title is None or len(new_title) == 0):
             return {'bad_fields': [{'title': 'empty'}]}
         else:
@@ -77,7 +78,10 @@ def update_detail_info(request):
             if new_content is not None:
                 info.content = new_content
             if info_id == 0:
-                now = dt.datetime.utcnow()
+                if new_timestamp == 0:
+                    now = dt.datetime.utcnow()
+                else:
+                    now = dt.datetime.utcfromtimestamp(new_timestamp)
                 info.timestamp = now
                 info.ts_year = now.year
                 info.ts_month = now.month

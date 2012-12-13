@@ -41,15 +41,31 @@ function btn_add_on_click() {
         edit_form_title = $("#edit_form_title"),
         cur_moment = self.data("moment"),
         txt_title = $("#txt_title"),
-        txt_content = $("#txt_content");
+        txt_content = $("#txt_content"),
+        txt_time = $("#txt_time"),
+        hidden_date = $("#hidden_date");
+
+    var default_time_val,
+        now = moment();
+
+    if (cur_moment.year() === now.year() &&
+            cur_moment.month() === now.month() &&
+            cur_moment.date() === now.date()) {
+        default_time_val = now.format("HH:mm");
+    }
+    else {
+        default_time_val = "12:00";
+    }
 
     if (edit_form.is(":visible")) {
         edit_form.animate({height: "0px"}, 400,
             function() {
                 txt_title.val("");
                 txt_content.val("");
+                txt_time.val(default_time_val);
+                hidden_date.val(cur_moment.format("YYYY-MM-DD"));
                 edit_form_title.html(cur_moment.format("LL"));
-                edit_form.animate({height: "240px"}, 400,
+                edit_form.animate({height: "290px"}, 400,
                     function() {
                         txt_title.focus();
                     });
@@ -58,8 +74,10 @@ function btn_add_on_click() {
     else {
         txt_title.val("");
         txt_content.val("");
+        txt_time.val(default_time_val);
+        hidden_date.val(cur_moment.format("YYYY-MM-DD"));
         edit_form_title.html(cur_moment.format("LL"));
-        edit_form.show().animate({height: "240px"}, 400,
+        edit_form.show().animate({height: "290px"}, 400,
             function() {
                 txt_title.focus();
             });
@@ -83,10 +101,21 @@ function form_edit_on_submit(ev) {
     var edit_form = $("#edit_form"),
         txt_title = $("#txt_title"),
         txt_content = $("#txt_content"),
-        data = {
-            title: txt_title.val(),
-            content: txt_content.val()
-        };
+        txt_time = $("#txt_time"),
+        hidden_date = $("#hidden_date");
+
+    var data,
+        cur_moment;
+
+    cur_moment = moment(hidden_date.val() + " " + txt_time.val(), 
+            ["YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm:ss"]);
+        
+    data = {
+        title: txt_title.val(),
+        content: txt_content.val(),
+        timestamp: cur_moment.unix()
+    };
+    // TODO: validate all the fields above....
 
     ev.preventDefault();
 
