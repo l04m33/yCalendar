@@ -176,8 +176,12 @@ function populate_cells() {
 
         new_cell.data('moment', cur_day.clone());
 
-        if (cur_day.toDate() < first_day_of_month || cur_day.toDate() > last_day_of_month) {
+        if (cur_day.unix() < first_day_of_month.unix() 
+                || cur_day.unix() > last_day_of_month.unix()) {
             new_cell.addClass("inactive-cell");
+        }
+        else if (cur_day.date() === now.date()) {
+            new_cell.addClass("today-cell");
         }
 
         cur_day.add("days", 1);

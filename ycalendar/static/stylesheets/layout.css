@@ -175,7 +175,11 @@
 
     .inactive-cell {
         background:     #fbfbfb;
-        opacity:        0.7
+        opacity:        0.7;
+    }
+
+    .today-cell {
+        background:     #f9e9ff;
     }
 
     .cells-column {
