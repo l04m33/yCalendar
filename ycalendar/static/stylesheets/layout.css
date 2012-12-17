@@ -232,6 +232,10 @@
         margin:         0px;
     }
 
+    .details_row {
+        opacity:        0;
+    }
+
     #btn_close {
         float:          left;
         width:          10px;

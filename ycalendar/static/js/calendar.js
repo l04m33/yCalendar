@@ -1,6 +1,45 @@
+function get_load_details_cb(container, cur_moment) {
+    var cb_func = function() {
+        var url = "/json/daily_list/" + cur_moment.format("YYYY-MM-DD");
+        var i,
+            new_row;
+
+        $.get(url, function(ret_data) {
+            var info_list,
+                cur_row;
+
+            if (ret_data.hasOwnProperty("info_list")) {
+                info_list = ret_data.info_list;
+                info_list.reverse();
+
+                cur_row = info_list.pop();
+
+                new_row = $("<div class=\"details_row\"></div>");
+                new_row.html(JSON.stringify(cur_row));
+                container.append(new_row);
+
+                new_row.animate({opacity: 1}, 200, 
+                    function() {
+                        cur_row = info_list.pop();
+                        if (typeof(cur_row) !== "undefined") {
+                            new_row = $("<div class=\"details_row\"></div>");
+                            new_row.html(JSON.stringify(cur_row));
+                            container.append(new_row);
+                            new_row.animate({opacity: 1}, 200, arguments.callee);
+                        }
+                    });
+            }
+        });
+    };
+
+    return cb_func
+}
+
+
 function cell_on_click() {
     var self = $(this),
         details = $("#details"),
+        details_content = $("#details_content"),
         btn_add = $("#btn_add"),
         btn_add_title = $("#btn_add_title"),
         cur_moment = self.data("moment");
@@ -11,14 +50,18 @@ function cell_on_click() {
         details.animate({width: "0px"}, 400,
             function() {
                 self.parent().after(details);
+                details_content.empty();
                 btn_add_title.html(cur_moment.format("YYYY-MM-DD"));
-                details.animate({width: "100px"}, 400);
+                details.animate({width: "100px"}, 400, 
+                    get_load_details_cb(details_content, cur_moment));
             });
     }
     else {
         self.parent().after(details);
+        details_content.empty();
         btn_add_title.html(cur_moment.format("YYYY-MM-DD"));
-        details.show().animate({width: "100px"}, 400);
+        details.show().animate({width: "100px"}, 400,
+            get_load_details_cb(details_content, cur_moment));
     }
 }
 
