@@ -1,3 +1,12 @@
+var g_config = {
+    slide_time:         400,
+    fade_time:          200,
+    edit_form_height:   "290px",
+    details_pane_width: "100px",
+    default_time:       "12:00",
+    default_limit:      5
+};
+
 function add_detail_row(container, row) {
     var new_row_title = $("<div class=\"details_row_title\"></div>"),
         new_row_content = $("<div class=\"details_row_content\"></div>"),
@@ -19,31 +28,36 @@ function get_load_details_cb(container, cur_moment) {
         var i,
             new_row;
 
-        $.get(url, function(ret_data) {
-            var info_list,
-                cur_row;
+        $.get(url, {
+                offset: 0, 
+                limit: g_config["default_limit"]
+            },
+            function(ret_data) {
+                var info_list,
+                    cur_row;
 
-            if (ret_data.hasOwnProperty("info_list")) {
-                info_list = ret_data.info_list;
-                info_list.reverse();
+                if (ret_data.hasOwnProperty("info_list")) {
+                    info_list = ret_data.info_list;
+                    info_list.reverse();
 
-                cur_row = info_list.pop();
-                if (typeof(cur_row) === "undefined") {
-                    container.html("<br/>");
-                    return;
+                    cur_row = info_list.pop();
+                    if (typeof(cur_row) === "undefined") {
+                        container.html("<br/>");
+                        return;
+                    }
+
+                    new_row = add_detail_row(container, cur_row);
+                    new_row.animate({opacity: 1}, g_config["fade_time"], 
+                        function() {
+                            cur_row = info_list.pop();
+                            if (typeof(cur_row) !== "undefined") {
+                                new_row = add_detail_row(container, cur_row);
+                                new_row.animate({opacity: 1}, g_config["fade_time"], 
+                                    arguments.callee);
+                            }
+                        });
                 }
-
-                new_row = add_detail_row(container, cur_row);
-                new_row.animate({opacity: 1}, 200, 
-                    function() {
-                        cur_row = info_list.pop();
-                        if (typeof(cur_row) !== "undefined") {
-                            new_row = add_detail_row(container, cur_row);
-                            new_row.animate({opacity: 1}, 200, arguments.callee);
-                        }
-                    });
-            }
-        });
+            });
     };
 
     return cb_func
@@ -53,29 +67,38 @@ function get_load_details_cb(container, cur_moment) {
 function cell_on_click() {
     var self = $(this),
         details = $("#details"),
-        details_content = $("#details_content"),
-        btn_add = $("#btn_add"),
-        btn_add_title = $("#btn_add_title"),
+        details_content,
+        btn_add,
+        btn_add_title,
+        cur_moment;
+
+    if (!details.is(":animated")) {
+        details_content = $("#details_content");
+        btn_add = $("#btn_add");
+        btn_add_title = $("#btn_add_title");
         cur_moment = self.data("moment");
 
-    btn_add.data('moment', cur_moment);
+        btn_add.data('moment', cur_moment);
 
-    if (details.is(":visible")) {
-        details.animate({width: "0px"}, 400,
-            function() {
-                self.parent().after(details);
-                details_content.empty();
-                btn_add_title.html(cur_moment.format("YYYY-MM-DD"));
-                details.animate({width: "100px"}, 400, 
-                    get_load_details_cb(details_content, cur_moment));
-            });
-    }
-    else {
-        self.parent().after(details);
-        details_content.empty();
-        btn_add_title.html(cur_moment.format("YYYY-MM-DD"));
-        details.show().animate({width: "100px"}, 400,
-            get_load_details_cb(details_content, cur_moment));
+        if (details.is(":visible")) {
+            details.animate({width: "0px"}, g_config["slide_time"],
+                function() {
+                    self.parent().after(details);
+                    details_content.empty();
+                    btn_add_title.html(cur_moment.format("YYYY-MM-DD"));
+                    details.animate({width: g_config["details_pane_width"]}, 
+                        g_config["slide_time"], 
+                        get_load_details_cb(details_content, cur_moment));
+                });
+        }
+        else {
+            self.parent().after(details);
+            details_content.empty();
+            btn_add_title.html(cur_moment.format("YYYY-MM-DD"));
+            details.show().animate({width: g_config["details_pane_width"]}, 
+                g_config["slide_time"],
+                get_load_details_cb(details_content, cur_moment));
+        }
     }
 }
 
@@ -83,8 +106,8 @@ function cell_on_click() {
 function btn_close_on_click() {
     var details = $("#details");
 
-    if (details.is(":visible")) {
-        details.animate({width: "0px"}, 400,
+    if (details.is(":visible") && (!details.is(":animated"))) {
+        details.animate({width: "0px"}, g_config["slide_time"],
             function() {
                 details.hide();
             });
@@ -111,18 +134,19 @@ function btn_add_on_click() {
         default_time_val = now.format("HH:mm");
     }
     else {
-        default_time_val = "12:00";
+        default_time_val = g_config["default_time"]
     }
 
     if (edit_form.is(":visible")) {
-        edit_form.animate({height: "0px"}, 400,
+        edit_form.animate({height: "0px"}, g_config["slide_time"],
             function() {
                 txt_title.val("");
                 txt_content.val("");
                 txt_time.val(default_time_val);
                 hidden_date.val(cur_moment.format("YYYY-MM-DD"));
                 edit_form_title.html(cur_moment.format("LL"));
-                edit_form.animate({height: "290px"}, 400,
+                edit_form.animate({height: g_config["edit_form_height"]}, 
+                    g_config["slide_time"],
                     function() {
                         txt_title.focus();
                     });
@@ -134,7 +158,8 @@ function btn_add_on_click() {
         txt_time.val(default_time_val);
         hidden_date.val(cur_moment.format("YYYY-MM-DD"));
         edit_form_title.html(cur_moment.format("LL"));
-        edit_form.show().animate({height: "290px"}, 400,
+        edit_form.show().animate({height: g_config["edit_form_height"]}, 
+            g_config["slide_time"],
             function() {
                 txt_title.focus();
             });
@@ -146,7 +171,7 @@ function btn_edit_cancel_on_click() {
     var edit_form = $("#edit_form");
 
     if (edit_form.is(":visible")) {
-        edit_form.animate({height: "0px"}, 400,
+        edit_form.animate({height: "0px"}, g_config["slide_time"],
             function() {
                 edit_form.hide();
             });
@@ -180,7 +205,7 @@ function form_edit_on_submit(ev) {
         function(ret_data) {
             // TODO: check the return value, and display errors?
             alert(JSON.stringify(ret_data));
-            edit_form.animate({height: "0px"}, 400,
+            edit_form.animate({height: "0px"}, g_config["slide_time"],
                 function() {
                     edit_form.hide();
                 });
