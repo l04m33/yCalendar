@@ -281,6 +281,7 @@ $(document).ready(function() {
     $("#details").hide();
     $("#details").css({height: col_height + 'px'});
     $("#details_container").css({height: container_height + 'px'});
+    $("#details_content").css({height: container_height + 'px'});
 
     $("#edit_form").hide();
 

@@ -230,6 +230,22 @@
         float:          left;
         width:          90px;
         margin:         0px;
+        overflow-x:     hidden;
+        overflow-y:     auto;
+    }
+
+    #details_content::-webkit-scrollbar {
+        width:          4px;
+    }
+
+    #details_content::-webkit-scrollbar-thumb {
+        background:     #dddddd;
+        border-radius:  2px;
+    }
+
+    #details_content::-webkit-scrollbar-track {
+        background:     #f7f7f7;
+        border-radius:  2px;
     }
 
     .details_row {
