@@ -234,6 +234,33 @@
 
     .details_row {
         opacity:        0;
+        margin-left:    5px;
+        margin-right:   5px;
+        width:          80px;
+        float:          left;
+        cursor:         pointer;
+        border-radius:  4px;
+        margin-bottom:  10px;
+    }
+
+    .details_row:hover {
+        background:     #f4f4f4;
+    }
+
+    .details_row_title {
+        padding-left:   5px;
+        padding-right:  5px;
+        font-size:      9px;
+        background:     #f4f4f4;
+        width:          70px;
+        border-radius:  4px;
+    }
+
+    .details_row_content {
+        padding-left:   10px;
+        padding-right:  5px;
+        width:          65px;
+        margin-bottom:  7px;
     }
 
     #btn_close {

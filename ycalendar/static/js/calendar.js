@@ -1,3 +1,18 @@
+function add_detail_row(container, row) {
+    var new_row_title = $("<div class=\"details_row_title\"></div>"),
+        new_row_content = $("<div class=\"details_row_content\"></div>"),
+        new_row = $("<div class=\"details_row\"></div>"),
+        cur_moment = moment.unix(row["timestamp"]);
+
+    new_row_title.html(cur_moment.format("YYYY"));
+    new_row_content.html(row["title"]);
+    new_row.append(new_row_title);
+    new_row.append(new_row_content);
+    container.append(new_row);
+
+    return new_row;
+}
+
 function get_load_details_cb(container, cur_moment) {
     var cb_func = function() {
         var url = "/json/daily_list/" + cur_moment.format("YYYY-MM-DD");
@@ -13,18 +28,17 @@ function get_load_details_cb(container, cur_moment) {
                 info_list.reverse();
 
                 cur_row = info_list.pop();
+                if (typeof(cur_row) === "undefined") {
+                    container.html("<br/>");
+                    return;
+                }
 
-                new_row = $("<div class=\"details_row\"></div>");
-                new_row.html(JSON.stringify(cur_row));
-                container.append(new_row);
-
+                new_row = add_detail_row(container, cur_row);
                 new_row.animate({opacity: 1}, 200, 
                     function() {
                         cur_row = info_list.pop();
                         if (typeof(cur_row) !== "undefined") {
-                            new_row = $("<div class=\"details_row\"></div>");
-                            new_row.html(JSON.stringify(cur_row));
-                            container.append(new_row);
+                            new_row = add_detail_row(container, cur_row);
                             new_row.animate({opacity: 1}, 200, arguments.callee);
                         }
                     });
