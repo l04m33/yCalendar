@@ -8,9 +8,9 @@ var g_config = {
 };
 
 function add_detail_row(container, row) {
-    var new_row_title = $("<div class=\"details_row_title\"></div>"),
-        new_row_content = $("<div class=\"details_row_content\"></div>"),
-        new_row = $("<div class=\"details_row\"></div>"),
+    var new_row_title = $("<div class=\"details-row-title\"></div>"),
+        new_row_content = $("<div class=\"details-row-content\"></div>"),
+        new_row = $("<div class=\"details-row\"></div>"),
         cur_moment = moment.unix(row["timestamp"]);
 
     new_row_title.html(cur_moment.format("YYYY"));
@@ -26,7 +26,10 @@ function get_load_details_cb(container, cur_moment) {
     var cb_func = function() {
         var url = "/json/daily_list/" + cur_moment.format("YYYY-MM-DD");
         var i,
-            new_row;
+            new_row,
+            details_overlay = $("#details_overlay");
+
+        details_overlay.show();
 
         $.get(url, {
                 offset: 0, 
@@ -37,6 +40,8 @@ function get_load_details_cb(container, cur_moment) {
                     cur_row;
 
                 if (ret_data.hasOwnProperty("info_list")) {
+                    details_overlay.hide();
+
                     info_list = ret_data.info_list;
                     info_list.reverse();
 
@@ -60,7 +65,7 @@ function get_load_details_cb(container, cur_moment) {
             });
     };
 
-    return cb_func
+    return cb_func;
 }
 
 
@@ -70,17 +75,20 @@ function cell_on_click() {
         details_content,
         btn_add,
         btn_add_title,
-        cur_moment;
+        cur_moment,
+        details_overlay;
 
     if (!details.is(":animated")) {
         details_content = $("#details_content");
         btn_add = $("#btn_add");
         btn_add_title = $("#btn_add_title");
         cur_moment = self.data("moment");
+        details_overlay = $("#details_overlay");
 
         btn_add.data('moment', cur_moment);
 
         if (details.is(":visible")) {
+            details_overlay.hide();
             details.animate({width: "0px"}, g_config["slide_time"],
                 function() {
                     self.parent().after(details);
@@ -104,9 +112,11 @@ function cell_on_click() {
 
 
 function btn_close_on_click() {
-    var details = $("#details");
+    var details = $("#details"),
+        details_overlay = $("#details_overlay");
 
     if (details.is(":visible") && (!details.is(":animated"))) {
+        details_overlay.hide();
         details.animate({width: "0px"}, g_config["slide_time"],
             function() {
                 details.hide();
@@ -279,9 +289,11 @@ $(document).ready(function() {
         container_height = col_height - header_height - 64;
 
     $("#details").hide();
-    $("#details").css({height: col_height + 'px'});
-    $("#details_container").css({height: container_height + 'px'});
-    $("#details_content").css({height: container_height + 'px'});
+    $("#details").css({"height": col_height + "px"});
+    $("#details_overlay").hide();
+    $("#details_overlay").css({"height": col_height + "px", "line-height": col_height + "px"});
+    $("#details_container").css({"height": container_height + "px"});
+    $("#details_content").css({"height": container_height + "px"});
 
     $("#edit_form").hide();
 
