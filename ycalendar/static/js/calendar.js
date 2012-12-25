@@ -223,7 +223,7 @@ function form_edit_on_submit(ev) {
 }
 
 
-function populate_cells() {
+function populate_cells(now) {
     var i;
     var cells_area = $("#cells-area");
 
@@ -235,10 +235,9 @@ function populate_cells() {
         cells_area.append(new_col)
     }
 
-    var now = moment();
-    var first_day_of_month = moment().startOf("month"),
+    var first_day_of_month = now.clone().startOf("month"),
         first_day_of_page = first_day_of_month.clone().subtract("days", first_day_of_month.day()),
-        last_day_of_month = moment().endOf("month"),
+        last_day_of_month = now.clone().endOf("month"),
         last_day_of_page = last_day_of_month.clone().add("days", 6 - last_day_of_month.day());
 
     var cur_day = first_day_of_page.clone().add("hours", 12);
@@ -272,7 +271,8 @@ function populate_cells() {
                 || cur_day.unix() > last_day_of_month.unix()) {
             new_cell.addClass("inactive-cell");
         }
-        else if (cur_day.date() === now.date()) {
+        else if (cur_day.date() === moment().date() 
+                && cur_day.month() === moment().month()) {
             new_cell.addClass("today-cell");
         }
 
@@ -282,7 +282,7 @@ function populate_cells() {
 
 
 $(document).ready(function() {
-    populate_cells();
+    populate_cells(moment());
 
     var col_height = $("#col-0").height(),
         header_height = $("details_header").height(),
