@@ -223,6 +223,28 @@ function form_edit_on_submit(ev) {
 }
 
 
+function set_month_list_focus(n) {
+    var month_items = $(".month-list-item");
+    var i,
+        cur_item,
+        focus_idx = n - 1;
+
+    for (i = 0; i < month_items.length; i++) {
+        cur_item = month_items.slice(i, i + 1);
+        cur_item.removeClass("month-list-item-focus month-list-item-fade-1 month-list-item-fade-2");
+        if (Math.abs(i - focus_idx) === 2) {
+            cur_item.addClass("month-list-item-fade-2");
+        }
+        else if (Math.abs(i - focus_idx) === 1) {
+            cur_item.addClass("month-list-item-fade-1");
+        }
+        else if (i === focus_idx) {
+            cur_item.addClass("month-list-item-focus");
+        }
+    }
+}
+
+
 function populate_cells(now) {
     var i;
     var cells_area = $("#cells-area");

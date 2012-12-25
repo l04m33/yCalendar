@@ -33,6 +33,35 @@
         100%    { -moz-transform: scale(2.0); }
     }
 
+    .month-list-item {
+        width:          70px;
+        height:         20px;
+        margin-bottom:  5px;
+        border-radius:  4px;
+        background:     #cccccc;
+        opacity:        0.3;
+        text-align:     center;
+        line-height:    20px;
+    }
+
+    .month-list-item-focus {
+        height:         50px;
+        opacity:        0.9;
+        line-height:    50px;
+    }
+
+    .month-list-item-fade-1 {
+        height:         40px;
+        opacity:        0.7;
+        line-height:    40px;
+    }
+
+    .month-list-item-fade-2 {
+        height:         30px;
+        opacity:        0.5;
+        line-height:    30px;
+    }
+
     .cell .date {
         opacity:        0.6;
         color:          #ffffff;
