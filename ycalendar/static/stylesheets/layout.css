@@ -44,6 +44,7 @@
         line-height:    20px;
         cursor:         pointer;
         box-shadow:     1px 1px 5px #dfdfdf;
+        text-shadow:    0px 1px 0px rgba(255, 255, 255, .75);
     }
 
     .month-list-item-focus {
