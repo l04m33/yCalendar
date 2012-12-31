@@ -223,28 +223,6 @@ function form_edit_on_submit(ev) {
 }
 
 
-function set_month_list_focus(n) {
-    var month_items = $(".month-list-item");
-    var i,
-        cur_item,
-        focus_idx = n - 1;
-
-    for (i = 0; i < month_items.length; i++) {
-        cur_item = month_items.slice(i, i + 1);
-        cur_item.removeClass("month-list-item-focus month-list-item-fade-1 month-list-item-fade-2");
-        if (Math.abs(i - focus_idx) === 2) {
-            cur_item.addClass("month-list-item-fade-2");
-        }
-        else if (Math.abs(i - focus_idx) === 1) {
-            cur_item.addClass("month-list-item-fade-1");
-        }
-        else if (i === focus_idx) {
-            cur_item.addClass("month-list-item-focus");
-        }
-    }
-}
-
-
 function populate_cells(now) {
     var i;
     var cells_area = $("#cells-area");
@@ -303,6 +281,35 @@ function populate_cells(now) {
 }
 
 
+function set_month_list_focus(n) {
+    var month_list = $("#month-list"),
+        month_items = month_list.children(".month-list-item");
+
+    var i,
+        cur_item,
+        focus_idx = n - 1;
+
+    for (i = 0; i < month_items.length; i++) {
+        cur_item = month_items.slice(i, i + 1);
+        cur_item.removeClass("month-list-item-focus month-list-item-fade-1 month-list-item-fade-2");
+        if (Math.abs(i - focus_idx) === 2) {
+            cur_item.addClass("month-list-item-fade-2");
+        }
+        else if (Math.abs(i - focus_idx) === 1) {
+            cur_item.addClass("month-list-item-fade-1");
+        }
+        else if (i === focus_idx) {
+            cur_item.addClass("month-list-item-focus");
+        }
+    }
+}
+
+
+function month_list_on_move(ev) {
+    console.log(ev);
+}
+
+
 $(document).ready(function() {
     populate_cells(moment());
 
@@ -328,5 +335,7 @@ $(document).ready(function() {
     $("#edit_form").bind("submit", form_edit_on_submit);
     $("#btn_close").bind("click", btn_close_on_click);
     $("#details").bind("mouseleave", btn_close_on_click);
-});
+
+    $("#month-list").bind("mousemove", month_list_on_move);
+}
 
