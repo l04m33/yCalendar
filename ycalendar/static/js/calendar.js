@@ -1,3 +1,10 @@
+(function() {
+
+
+var g_var = {
+    last_move_ev_timestamp: 0
+};
+
 var g_config = {
     slide_time:         400,
     fade_time:          200,
@@ -281,32 +288,49 @@ function populate_cells(now) {
 }
 
 
-function set_month_list_focus(n) {
+function set_month_list_focus(mouse_y) {
     var month_list = $("#month-list"),
         month_items = month_list.children(".month-list-item");
 
     var i,
         cur_item,
-        focus_idx = n - 1;
+        item_height,
+        item_pos,
+        item_y_center,
+        y_diff,
+        scale_factor;
+
 
     for (i = 0; i < month_items.length; i++) {
         cur_item = month_items.slice(i, i + 1);
-        cur_item.removeClass("month-list-item-focus month-list-item-fade-1 month-list-item-fade-2");
-        if (Math.abs(i - focus_idx) === 2) {
-            cur_item.addClass("month-list-item-fade-2");
-        }
-        else if (Math.abs(i - focus_idx) === 1) {
-            cur_item.addClass("month-list-item-fade-1");
-        }
-        else if (i === focus_idx) {
+
+        item_pos = cur_item.position();
+
+        item_height = cur_item.height();
+        item_y_center = item_pos.top + item_height / 2 + 7;
+        y_diff = Math.abs(mouse_y - item_y_center);
+
+        if (y_diff < item_height / 2) {
             cur_item.addClass("month-list-item-focus");
         }
+        else {
+            cur_item.removeClass("month-list-item-focus");
+        }
+
+        y_diff = Math.max(1,  y_diff / 15);
+
+        scale_factor = 1.0 / y_diff + 1;
+        cur_item.css("-webkit-transform", "scale(" + scale_factor + ")");
+        cur_item.css("-moz-transform",    "scale(" + scale_factor + ")");
     }
 }
 
 
 function month_list_on_move(ev) {
-    console.log(ev);
+    if (ev.timeStamp - g_var["last_move_ev_timestamp"] > 50) {
+        set_month_list_focus(ev.clientY);
+        g_var["last_move_ev_timestamp"] = ev.timeStamp;
+    }
 }
 
 
@@ -337,5 +361,8 @@ $(document).ready(function() {
     $("#details").bind("mouseleave", btn_close_on_click);
 
     $("#month-list").bind("mousemove", month_list_on_move);
-}
+});
+
+
+})();
 

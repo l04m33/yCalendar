@@ -2,3 +2,5 @@ __pycache__
 *.egg-info
 *.sqlite
 *.swp
+pyramid.log
+pyramid.pid
