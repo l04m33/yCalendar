@@ -326,6 +326,18 @@ function set_month_list_focus(mouse_y) {
 }
 
 
+function set_month_list_focus_by_month(month) {
+    var month_list = $("#month-list"),
+        month_items = month_list.children(".month-list-item");
+
+    var cur_item = month_items.slice(month - 1, month),
+        item_pos = cur_item.position(),
+        item_y_center = item_pos.top + cur_item.height() / 2 + 7;
+
+    set_month_list_focus(item_y_center);
+}
+
+
 function month_list_on_move(ev) {
     if (ev.timeStamp - g_var["last_move_ev_timestamp"] > 50) {
         set_month_list_focus(ev.clientY);
@@ -361,6 +373,10 @@ $(document).ready(function() {
     $("#details").bind("mouseleave", btn_close_on_click);
 
     $("#month-list").bind("mousemove", month_list_on_move);
+    $("#month-list").bind("mouseleave", function(){
+        set_month_list_focus_by_month(moment().month() + 1);
+    });
+    set_month_list_focus_by_month(moment().month() + 1);
 });
 
 
