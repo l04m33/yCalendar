@@ -2,7 +2,8 @@
 
 
 var g_var = {
-    last_move_ev_timestamp: 0
+    last_move_ev_timestamp: 0,
+    cur_month: 0
 };
 
 var g_config = {
@@ -334,6 +335,7 @@ function set_month_list_focus_by_month(month) {
         item_pos = cur_item.position(),
         item_y_center = item_pos.top + cur_item.height() / 2 + 7;
 
+    g_var["cur_month"] = month;
     set_month_list_focus(item_y_center);
 }
 
@@ -342,6 +344,40 @@ function month_list_on_move(ev) {
     if (ev.timeStamp - g_var["last_move_ev_timestamp"] > 50) {
         set_month_list_focus(ev.clientY);
         g_var["last_move_ev_timestamp"] = ev.timeStamp;
+    }
+}
+
+
+function month_list_on_click(ev) {
+    var self = $(this),
+        cur_item = self.children(".month-list-item-focus"),
+        dummy_moment,
+        month_idx;
+
+    if (cur_item.length === 1) {
+        month_idx = Math.floor((cur_item.position().top - 125) / 31);
+        dummy_moment = moment();
+        dummy_moment.month(month_idx);
+        populate_cells(dummy_moment);
+        set_month_list_focus_by_month(month_idx + 1);
+    }
+}
+
+
+function populate_month_list() {
+    var months = ["Jan", "Feb", "Mar",
+                  "Apr", "May", "Jun",
+                  "Jul", "Aug", "Sep",
+                  "Oct", "Nov", "Dec"],
+        month_list = $("month-list");
+
+    var i,
+        new_item;
+
+    month_list.empty();
+    for (i = 0; i < months.length; i++) {
+        new_item = $("<div class=\"month-list-item\">" + months[i] + "</div>");
+        month_list.append(new_item);
     }
 }
 
@@ -372,10 +408,12 @@ $(document).ready(function() {
     $("#btn_close").bind("click", btn_close_on_click);
     $("#details").bind("mouseleave", btn_close_on_click);
 
+    populate_month_list();
     $("#month-list").bind("mousemove", month_list_on_move);
     $("#month-list").bind("mouseleave", function(){
-        set_month_list_focus_by_month(moment().month() + 1);
+        set_month_list_focus_by_month(g_var["cur_month"]);
     });
+    $("#month-list").bind("click", month_list_on_click);
     set_month_list_focus_by_month(moment().month() + 1);
 });
 
