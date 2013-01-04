@@ -233,7 +233,12 @@ function form_edit_on_submit(ev) {
 
 function populate_cells(now) {
     var i;
-    var cells_area = $("#cells-area");
+    var cells_area = $("#cells-area"),
+        details_pane = $("#details");
+
+    details_pane.hide();
+    details_pane.width(0);
+    cells_area.after(details_pane);
 
     cells_area.empty();
     for(i = 0; i < 7; i++) {
@@ -286,6 +291,10 @@ function populate_cells(now) {
 
         cur_day.add("days", 1);
     }
+
+    $(".cell").bind("click", cell_on_click);
+    $(".left-cell").bind("click", cell_on_click);
+    $(".right-cell").bind("click", cell_on_click);
 }
 
 
@@ -397,10 +406,6 @@ $(document).ready(function() {
     $("#details_content").css({"height": container_height + "px"});
 
     $("#edit_form").hide();
-
-    $(".cell").bind("click", cell_on_click);
-    $(".left-cell").bind("click", cell_on_click);
-    $(".right-cell").bind("click", cell_on_click);
 
     $("#btn_add").bind("click", btn_add_on_click);
     $("#btn_edit_cancel").bind("click", btn_edit_cancel_on_click);
