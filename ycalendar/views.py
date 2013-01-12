@@ -1,16 +1,50 @@
 from pyramid.response import Response
 from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPNotFound, HTTPFound
+from pyramid.httpexceptions import HTTPNotFound, HTTPFound, HTTPForbidden
+import pyramid.security as sec
 
 from sqlalchemy.exc import DBAPIError
 
 from .models import (
     DBSession,
     DetailInfo,
+    User
     )
 
 import datetime as dt
 import sqlalchemy as sqla
+
+
+@view_config(route_name='calendar.page', renderer='calendar.mako')
+def calendar_page(request):
+    user_name = sec.authenticated_userid(request)
+    if user_name is None:
+        raise HTTPForbidden()
+
+    return {'user_name': user_name}
+
+
+@view_config(route_name='login.page', renderer='login.mako')
+def login_page(request):
+    user_name = sec.authenticated_userid(request)
+    if user_name is not None:
+        return HTTPFound(location=request.route_url('calendar.page'))
+
+    if 'user_name' in request.POST:
+        user_name = request.POST.get('user_name', '')
+        password = request.POST.get('password', '')
+        user = DBSession.query(User).filter(User.id == user_name).first()
+        if user is None:
+            return HTTPForbidden()
+        if user.check_password(password):
+            headers = sec.remember(request, user.id)
+            calendar_page = request.route_url('calendar.page')
+            return HTTPFound(location=calendar_page, headers=headers)
+        else:
+            return HTTPForbidden()
+
+    else:
+        return {}
 
 
 @view_config(route_name='daily_list.json', renderer='json')

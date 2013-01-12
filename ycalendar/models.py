@@ -21,6 +21,16 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
 
+class User(Base):
+    __tablename__ = 'cal_users'
+    id          = Column(Unicode(64), primary_key=True)
+    name        = Column(Unicode(128), nullable=False)
+    password    = Column(Unicode(128), nullable=False)
+
+    def check_password(self, password):
+        return self.password == password
+
+
 class DetailInfo(Base):
     __tablename__ = 'cal_details'
     id          = Column(Integer, primary_key=True)
