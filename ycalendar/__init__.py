@@ -17,7 +17,7 @@ def main(global_config, **settings):
     config = Configurator(settings=settings)
 
     authn_policy = AuthTktAuthenticationPolicy(
-            secret='safe hidden security secret 6789',
+            secret=settings['auth.secret'],
             cookie_name='auth_tkt',
             #hashalg='sha512')
             )
