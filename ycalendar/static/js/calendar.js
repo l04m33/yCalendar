@@ -3,7 +3,14 @@
 
 var g_var = {
     last_move_ev_timestamp: 0,
-    cur_month: 0
+    cur_month: 0,
+    time_tip_style: {
+        showOn: 'mouseover',
+        target: true,
+        tipJoint: 'left',
+        background: '#ffffff',
+        borderColor: '#e0e0e0'
+    }
 };
 
 var g_config = {
@@ -25,6 +32,7 @@ function add_detail_row(container, row) {
     new_row_content.html(row["title"]);
     new_row.append(new_row_title);
     new_row.append(new_row_content);
+    new_row.opentip(cur_moment.format("HH:mm"), g_var["time_tip_style"]);
     container.append(new_row);
 
     return new_row;

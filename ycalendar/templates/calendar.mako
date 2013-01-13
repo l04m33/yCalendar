@@ -21,6 +21,7 @@
 	<link rel="stylesheet" href="static/stylesheets/base.css">
 	<link rel="stylesheet" href="static/stylesheets/skeleton.css">
 	<link rel="stylesheet" href="static/stylesheets/layout.css">
+	<link rel="stylesheet" href="static/stylesheets/opentip.css">
 
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -28,6 +29,8 @@
 
     <script src="static/js/moment.js"></script>
     <script src="static/js/jquery-1.8.2.js"></script>
+    <script src="static/js/opentip.js"></script>
+    <script src="static/js/adapter.jquery.js"></script>
     <script src="static/js/calendar.js"></script>
 
 	<!-- Favicons
