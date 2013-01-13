@@ -19,6 +19,7 @@ def main(global_config, **settings):
     authn_policy = AuthTktAuthenticationPolicy(
             secret=settings['auth.secret'],
             cookie_name='auth_tkt',
+            include_ip=True,
             #hashalg='sha512')
             )
     authz_policy = ACLAuthorizationPolicy()

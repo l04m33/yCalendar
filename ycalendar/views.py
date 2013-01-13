@@ -17,23 +17,20 @@ import sqlalchemy as sqla
 
 @view_config(route_name='calendar.page', renderer='calendar.mako')
 def calendar_page(request):
-    user_name = sec.authenticated_userid(request)
-    if user_name is None:
-        raise HTTPForbidden()
-
-    return {'user_name': user_name}
+    user_id = check_user_id(request)
+    return {'user_id': user_id}
 
 
 @view_config(route_name='login.page', renderer='login.mako')
 def login_page(request):
-    user_name = sec.authenticated_userid(request)
-    if user_name is not None:
+    user_id = sec.authenticated_userid(request)
+    if user_id is not None:
         return HTTPFound(location=request.route_url('calendar.page'))
 
-    if 'user_name' in request.POST:
-        user_name = request.POST.get('user_name', '')
+    if 'submit' in request.POST:
+        user_id = request.POST.get('user_id', '')
         password = request.POST.get('password', '')
-        user = DBSession.query(User).filter(User.id == user_name).first()
+        user = DBSession.query(User).filter(User.id == user_id).first()
         if user is None:
             return HTTPForbidden()
         if user.check_password(password):
@@ -49,6 +46,8 @@ def login_page(request):
 
 @view_config(route_name='daily_list.json', renderer='json')
 def daily_list(request):
+    user_id = check_user_id(request)
+
     year = int(request.matchdict.get('year', -1))
     month = int(request.matchdict.get('month', -1))
     day = int(request.matchdict.get('day', -1))
@@ -68,6 +67,8 @@ def daily_list(request):
 
 @view_config(route_name='vertical_daily_list.json', renderer='json')
 def vertical_daily_list(request):
+    user_id = check_user_id(request)
+
     month = int(request.matchdict.get('month', -1))
     day = int(request.matchdict.get('day', -1))
 
@@ -83,6 +84,8 @@ def vertical_daily_list(request):
 
 @view_config(route_name='detail_info.json', renderer='json')
 def detail_info(request):
+    user_id = check_user_id(request)
+
     info_id = int(request.matchdict.get('id', -1))
     info = DBSession.query(DetailInfo).filter(DetailInfo.id == info_id).first()
     if info is None:
@@ -92,6 +95,8 @@ def detail_info(request):
 
 @view_config(route_name='update_detail_info.json', renderer='json')
 def update_detail_info(request):
+    user_id = check_user_id(request)
+
     if request.method == 'POST':
         info_id = int(request.matchdict.get('id', 0))
         if info_id == 0:
@@ -150,4 +155,11 @@ def get_req_data(method, key, val_type, default_val):
         return val_type(method.get(key, default_val))
     except ValueError:
         return default_val
+
+
+def check_user_id(request):
+    user_id = sec.authenticated_userid(request)
+    if user_id is None:
+        raise HTTPForbidden()
+    return user_id
 

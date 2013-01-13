@@ -3,9 +3,9 @@
 </head>
 <body>
     <form action="/login" method="post">
-        <input name="user_name" type="text" />
+        <input name="user_id" type="text" />
         <input name="password" type="password" />
-        <input type="submit" />
+        <input name="submit" type="submit" />
     </form>
 </body>
 </html>
