@@ -22,16 +22,60 @@ var g_config = {
     default_limit:      5
 };
 
+function row_title_on_mouseenter() {
+    var self = $(this);
+    self.children(".arrow-down").css("opacity", 0.7);
+}
+
+function row_title_on_mouseleave() {
+    var self = $(this);
+    self.children(".arrow-down").css("opacity", 0.1);
+}
+
+function row_title_on_click() {
+    var self = $(this),
+        btns = self.parent().children(".details-edit-btns");
+    
+    if (!btns.is(":animated")) {
+        if (!btns.is(":visible")) {
+            btns.show();
+            btns.animate({opacity: 1, height: "20px"}, g_config["fade_time"]);
+        }
+        else {
+            btns.animate({opacity: 0, height:"0px"}, g_config["fade_time"],
+                    function() { btns.hide(); });
+        }
+    }
+}
+
+function row_on_mouseleave() {
+    var self = $(this),
+        btns = self.children(".details-edit-btns");
+
+    if (btns.is(":visible")) {
+        btns.animate({opacity: 0, height:"0px"}, g_config["fade_time"],
+                function() { btns.hide(); });
+    }
+}
+
 function add_detail_row(container, row) {
     var new_row_title = $("<div class=\"details-row-title\"></div>"),
+        new_edit_arrow = $("<div class=\"arrow-down\" style=\"float:right;opacity:0.1;\"></div>"),
         new_row_content = $("<div class=\"details-row-content\"></div>"),
         new_row = $("<div class=\"details-row\"></div>"),
+        new_edit_btns = $("<div class=\"details-edit-btns\">edit delete</div>"),
         cur_moment = moment.unix(row["timestamp"]);
 
     new_row_title.html(cur_moment.format("YYYY"));
+    new_row_title.append(new_edit_arrow);
+    new_row_title.bind("mouseenter", row_title_on_mouseenter);
+    new_row_title.bind("mouseleave", row_title_on_mouseleave);
+    new_row_title.bind("click", row_title_on_click);
     new_row_content.html(row["title"]);
     new_row.append(new_row_title);
+    new_row.append(new_edit_btns);
     new_row.append(new_row_content);
+    new_row.bind("mouseleave", row_on_mouseleave);
     new_row.opentip(cur_moment.format("HH:mm"), g_var["time_tip_style"]);
     container.append(new_row);
 
