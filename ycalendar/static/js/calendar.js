@@ -34,7 +34,7 @@ function row_title_on_mouseleave() {
 
 function row_title_on_click() {
     var self = $(this),
-        btns = self.parent().children(".details-edit-btns");
+        btns = self.parent().children(".details-edit-stub");
     
     if (!btns.is(":animated")) {
         if (!btns.is(":visible")) {
@@ -50,7 +50,7 @@ function row_title_on_click() {
 
 function row_on_mouseleave() {
     var self = $(this),
-        btns = self.children(".details-edit-btns");
+        btns = self.children(".details-edit-stub");
 
     if (btns.is(":visible")) {
         btns.animate({opacity: 0, height:"0px"}, g_config["fade_time"],
@@ -63,7 +63,7 @@ function add_detail_row(container, row) {
         new_edit_arrow = $("<div class=\"arrow-down\" style=\"float:right;opacity:0.1;\"></div>"),
         new_row_content = $("<div class=\"details-row-content\"></div>"),
         new_row = $("<div class=\"details-row\"></div>"),
-        new_edit_btns = $("<div class=\"details-edit-btns\">edit delete</div>"),
+        new_edit_btns = $("<div class=\"details-edit-stub\"><div class=\"details-edit-btn\">edit</div><div class=\"details-edit-btn\">delete</div></div>"),
         cur_moment = moment.unix(row["timestamp"]);
 
     new_row_title.html(cur_moment.format("YYYY"));
