@@ -133,6 +133,15 @@ def update_detail_info(request):
                 DBSession.add(info)
             return {'ok': 0}
 
+    elif request.method == 'DELETE':
+        info_id = int(request.matchdict.get('id', 0))
+        info = DBSession.query(DetailInfo).filter(DetailInfo.id == info_id).first()
+        if info is not None:
+            DBSession.delete(info)
+            return {'ok': 0}
+        else:
+            return {}
+
     else:
         return {}
 
